@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mafiagpt"
+version = "0.1.0"
+description = ""
+authors = ["Brenton  <26958105+bmoraida@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.10.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
