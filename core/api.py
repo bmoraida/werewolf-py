@@ -8,7 +8,7 @@ import os, time
 from openai import OpenAI
 
 # this is for printing messages in terminal
-DEBUG = True
+DEBUG = False
 
 
 # getting open ai api key from the evnironmental variables

@@ -1,7 +1,7 @@
-# Werewolf
+_# Werewolf
 
 A zero-player version of the social deduction game
-designed by [Dimitry Davidoff](<https://en.wikipedia.org/wiki/Mafia_(party_game)>)
+designed by [Dimitry Davidoff](https://en.wikipedia.org/wiki/Mafia_(party_game))
 with rules modifications by [Andrew Plotkin](https://www.eblong.com/zarf/werewolf.html).
 
 The roles are :
@@ -11,25 +11,26 @@ The roles are :
 - 3 Villagers
 - 2 Werewolves
 
-## Get started
+## Getting Started
 
-Install via poetry :
+Install dependencies via (poetry)[https://python-poetry.org/] :
 
 ```shell
 poetry install
 ```
 
-Set your Openai API key as an enivronmental variable with key : OPENAI_API_KEY
+Run `mv .env_template .env` file and add your OPENAI_API_KEY. Sign up at [https://www.openai.com/](https://www.openai.com/)
 
-- you can configure your model(Default is 'gpt-3.5-turbo') and your rate_limit and token_limit in api.py
+- You can configure your model(Default is 'gpt-3.5-turbo') and your rate_limit and token_limit in api.py
 
 - make DEBUG=True in api.py if you want to see all messages passed to GPT model.
 
 ```shell
-python run.py
+source .env
+poetry run python run.py
 ```
 
-it will save a log file in the bellow format in records/ folder.
+It will save a log file in the bellow format in the records/ folder.
 
 ## log.json format
 
@@ -114,7 +115,7 @@ events are :
 }
 ```
 
-- inquiried :
+- inquired :
 
 ```javascript
 'content':{
@@ -143,15 +144,15 @@ events are :
 
 ## Prompts
 
-- Game Introduction('/intro_prompt.txt') : rules and the role of the player
-- Game Reports('/report_prompt.txt) :
+- Game Introduction('prompts/') : rules and the role of the player
+- Game Reports('prompts/) :
   - Speeches in last round
-  - Game status : alive players in seperation of the teams.
-  - Players status : alivness of players based on their number
-  - Agent previous SPEACIAL actions
+  - Game status : alive players in separation of the teams.
+  - Players status : aliveness of players based on their number
+  - Agent previous SPECIAL actions
   - Agent previous VOTES
   - Notes that have taken by the agent
 - Commands('/game.py') :
   - Speak command
   - Vote command
-  - targetting/healing/killing/inquiring command
+  - targeting/healing/killing/inquiring command

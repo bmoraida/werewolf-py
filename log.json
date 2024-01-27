@@ -220,7 +220,7 @@
         "content": "night"
     },
     {
-        "event": "inquiried",
+        "event": "inquired",
         "content": {
             "player": 1,
             "context": true,
@@ -383,7 +383,7 @@
         "content": "night"
     },
     {
-        "event": "inquiried",
+        "event": "inquired",
         "content": {
             "player": 0,
             "context": true,

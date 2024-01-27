@@ -1,6 +1,6 @@
 """
     This is for making the log.json readable as an article in MarkDown format.
-    You should pass the log.json file to the program while excuting it.
+    You should pass the log.json file to the program while executing it.
 """
 
 import json, sys
@@ -92,7 +92,7 @@ Reason :
         text += f"""
 *{content['player']}* ({roles[content['player']]}) is DEAD! 💀
 """
-    elif event == "inquiried":
+    elif event == "inquired":
         text += f"""
 Seer decided to inquiry Player *{content['player']}* ({roles[content['player']]})
 

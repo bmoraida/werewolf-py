@@ -72,8 +72,8 @@ YOUR PREVIOUS NOTE for yourself :
 def speech_command():
     return """ATTENTION : 
 !!! You MUST NOT REVEAL your exact role. you can claim that you are villager(lie or true) but for example you shouldn't say : "I'm Medic"
-!!! there's no needage to remind rules to others. just focus on your own game and don't repeat things.
-!!! don't use repeatitive phrases. add something to the game. be short and direct. also be somehow aggressive and start targetting.
+!!! there's no need  to remind rules to others. just focus on your own game and don't repeat things.
+!!! don't use repetitive phrases. add something to the game. be short and direct. also be somehow aggressive and start targetting.
 NOW IS YOUR TURN TO SPEAK TO ALIVE PLAYERS : """
 
 
@@ -86,5 +86,5 @@ Your notes as your memory and your strategy:
 every player has a private notebook. in each round (day and night) you can update that notes for yourself to remember for next decisions. your notebook will be only your last update and it will override. so try to summarise previous notes in new one too.
     - You should be clear and summarise important actions in the round that you think it will help you in future. it should be SHORT and don't write unneccesary things in it.
     - if you have something previously in your notebook that is not usable anymore (e.g about targeting someone that is no more alive) ignore that note and don't add it to new update.
-    - ONLY you can see your notes so you don't talk to others, just create your policies for next rounds. there is no needage to show your innocent. just fix your policy for yourself.
+    - ONLY you can see your notes so you don't talk to others, just create your policies for next rounds. there is no need to show you are innocent. Just fix your policy for yourself.
 NOW JUST SEND YOUR NEW VERSION OF NOTES : """

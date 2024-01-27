@@ -1,7 +1,10 @@
-import random, logging
+import random
+import logging
 from core.api import send_message
-import json, re
+import json
+import re
 from prompts import render_prompts as render
+import os
 
 
 class Player:
@@ -22,23 +25,24 @@ class Player:
             command
             + "REMINDER: your message must include the number of player that you want to perform action on it.",
         )
+        print(self.logger(res))
         nums_in_res = re.findall(r"\d+", res)
-        if nums_in_res == []:
-            Game.logger.warning("No player provided in targetting.")
-            return (None, res)
+        if not nums_in_res:
+            Game.logger.warning("No player provided in targeting.")
+            return None, res
         target = int(nums_in_res[0])
         if target not in Game.alive_players:
             Game.logger.warning("Targeting a wrong player")
-            return (None, res)
-        return (target, res)
+            return None, res
+        return target, res
 
-    def vote(self, Game):
+    def vote(self, game):
         target, reason = self.targeting(
-            Game,
+            game,
             "Command: just send the number of the player that you want to vote for. You must not vote to yourself. if you don't want to vote anyone just send an empty response.",
         )
         self.votes.append(target)
-        return (target, reason)
+        return target, reason
 
 
 class Villager(Player):
@@ -69,7 +73,7 @@ class Werewolf(Player):
                 Game.kill(player)
             self.special_actions_log.append(f"you attemped to kill player{target}")
 
-    def advicing(self, Game):
+    def advising(self, Game):
         target, reason = self.targeting(
             Game,
             "Command : send a short advice on which player do you suppose for eliminating at tonight from villagers.",
@@ -115,7 +119,7 @@ class Seer(Villager):
             self.special_actions_log.append(f" Player {target} is {tag} werewolf")
             Game.log_submit(
                 {
-                    "event": "inquiried",
+                    "event": "inquired",
                     "content": {
                         "player": target,
                         "context": is_werewolf,
@@ -153,7 +157,11 @@ class Game:
         self.logger.info(data)
 
     def set_players(
-        self, simple_villagers_roles, werewolves_roles, medics_roles, seers_roles
+        self,
+        simple_villagers_roles: list,
+        werewolves_roles: list,
+        medics_roles: list,
+        seers_roles: list,
     ):
         shuffled_roles = (
             simple_villagers_roles + werewolves_roles + medics_roles + seers_roles
@@ -215,7 +223,7 @@ class Game:
         if len(werewolves) == len(villagers):
             self.log_submit({"event": "end", "winner": "Werewolves"})
             return True
-        if werewolves == []:
+        if not werewolves:
             self.log_submit({"event": "end", "winner": "Villagers"})
             return True
         return False
@@ -232,52 +240,52 @@ class Game:
 
     def run_day(self):
         self.report = []
-        for Player in self.alive_players:
+        for player in self.alive_players:
             res = send_message(
-                render.game_intro(Player),
-                render.game_report(self, Player),
+                render.game_intro(player),
+                render.game_report(self, player),
                 render.speech_command(),
             ).replace("\n", " ")
-            self.report.append(str(Player) + "opinion : " + res)
+            self.report.append(str(player) + "opinion : " + res)
             self.log_submit(
-                {"event": "speech", "content": {"player": Player.id, "context": res}}
+                {"event": "speech", "content": {"player": player.id, "context": res}}
             )
         votes = [0] * 7
         self.log_submit({"event": "vote_start"})
-        for Player in self.alive_players:
-            target_voted, reason = Player.vote(self)
+        for player in self.alive_players:
+            target_voted, reason = player.vote(self)
             if target_voted:
                 self.log_submit(
                     {
                         "event": "voted",
                         "content": {
-                            "player": Player.id,
+                            "player": player.id,
                             "voted_to_player": target_voted,
                             "reason": reason,
                         },
                     }
                 )
                 votes[target_voted] += 1
-                self.report.append(f"{Player} Voted to {target_voted}")
+                self.report.append(f"{player} Voted to {target_voted}")
             else:
-                self.logger.warning(f"{Player} skipped the voting")
+                self.logger.warning(f"{player} skipped the voting")
         self.log_submit({"event": "vote_results", "content": votes})
         self.log_submit({"event": "vote_end"})
         self.votes.append(dict(enumerate(votes)))
         self.check_votes()
-        for Player in self.alive_players:
+        for player in self.alive_players:
             res = send_message(
-                render.game_intro(Player),
-                render.game_report(self, Player),
+                render.game_intro(player),
+                render.game_report(self, player),
                 render.notetaking_command(),
             )
             self.log_submit(
                 {
                     "event": "notetaking",
-                    "content": {"player": Player.id, "context": res},
+                    "content": {"player": player.id, "context": res},
                 }
             )
-            Player.notes = res
+            player.notes = res
         return
 
     def run_night(self):
@@ -296,13 +304,14 @@ class Game:
             if werewolf.rank == "leader":
                 werewolf.killing(self)
             else:
-                werewolf.advicing(self)
+                werewolf.advising(self)
         return
 
     def run_game(self):
         while True:
             self.log_submit({"event": "cycle", "content": "day"})
             self.run_day()
+            self.save_game()
             if self.is_game_end():
                 self.save_game()
                 return
@@ -313,5 +322,7 @@ class Game:
                 return
 
     def save_game(self):
+        if not os.path.isdir('records'):
+            os.mkdir('records')
         with open(f"records/game_{self.id}_log.json", "w") as log_file:
             json.dump(self.log, log_file, indent=4)
