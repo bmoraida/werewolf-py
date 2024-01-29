@@ -1,4 +1,4 @@
-_# Werewolf
+# Werewolf
 
 A zero-player version of the social deduction game
 designed by [Dimitry Davidoff](https://en.wikipedia.org/wiki/Mafia_(party_game))
@@ -13,7 +13,7 @@ The roles are :
 
 ## Getting Started
 
-Install dependencies via (poetry)[https://python-poetry.org/] :
+Install dependencies via [poetry](https://python-poetry.org/) :
 
 ```shell
 poetry install
